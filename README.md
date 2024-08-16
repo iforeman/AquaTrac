@@ -1,6 +1,6 @@
-# AquaTrack
+# AquaTrac
 
-AquaTrack is a comprehensive aquarium management system designed to help hobbyists and professionals efficiently manage their aquariums.
+AquaTrac is a comprehensive aquarium management system designed to help hobbyists and professionals efficiently manage their aquariums.
 
 ## Features
 
