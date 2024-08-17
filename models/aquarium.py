@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float, Enum, ForeignKey, Date
 from sqlalchemy.orm import relationship
+from .user import User
 from .base import Base
+from .store import Store
 
 class Aquarium(Base):
     __tablename__ = 'aquariums'
