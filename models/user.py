@@ -1,14 +1,17 @@
-# /Users/ian/Documents/Dev/aquatrac/models/user.py
+from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
+from .base import Base
 
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False, unique=True)
+    email = Column(String, nullable=False, unique=True)
+    password_hash = Column(String, nullable=False)
+    preferences = Column(Text)
 
-db = SQLAlchemy()
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    aquariums = relationship('Aquarium', back_populates='user')
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f"<User(id={self.id}, username={self.username}, email={self.email})>"
