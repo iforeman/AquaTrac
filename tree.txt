@@ -1,0 +1,175 @@
+.
+├── README.md
+├── __pycache__
+│   ├── app.cpython-311.pyc
+│   ├── app.cpython-312.pyc
+│   ├── config.cpython-312.pyc
+│   └── init_db.cpython-312.pyc
+├── app.py
+├── config.py
+├── create_db.py
+├── database
+│   └── db_manager.py
+├── extract_schema.py
+├── init_db.py
+├── instance
+│   └── aquatrac.db
+├── models
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── aquarium.cpython-312.pyc
+│   │   ├── base.cpython-312.pyc
+│   │   ├── equipment.cpython-312.pyc
+│   │   ├── expense.cpython-312.pyc
+│   │   ├── fish.cpython-312.pyc
+│   │   ├── income.cpython-312.pyc
+│   │   ├── invertebrate.cpython-312.pyc
+│   │   ├── plant.cpython-312.pyc
+│   │   ├── resource.cpython-312.pyc
+│   │   ├── store.cpython-312.pyc
+│   │   ├── task.cpython-312.pyc
+│   │   ├── user.cpython-312.pyc
+│   │   └── water_parameter.cpython-312.pyc
+│   ├── aquarium_model.py
+│   ├── base_model.py
+│   ├── equipment_model.py
+│   ├── expense_model.py
+│   ├── fish_model.py
+│   ├── income_model.py
+│   ├── invertebrate_model.py
+│   ├── plant_model.py
+│   ├── resource_model.py
+│   ├── store_model.py
+│   ├── supplier_model.py
+│   ├── task_model.py
+│   ├── user_model.py
+│   └── water_parameter_model.py
+├── pre-4-sept-test_database_models.py
+├── pytest.ini
+├── requirements.txt
+├── routes
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── aquarium.cpython-312.pyc
+│   │   ├── aquarium_route.cpython-312.pyc
+│   │   ├── equipment_route.cpython-312.pyc
+│   │   ├── expense_route.cpython-312.pyc
+│   │   ├── fish_route.cpython-312.pyc
+│   │   ├── income_route.cpython-312.pyc
+│   │   ├── invertebrate_route.cpython-312.pyc
+│   │   ├── plant_route.cpython-312.pyc
+│   │   ├── resource_route.cpython-312.pyc
+│   │   ├── store_route.cpython-312.pyc
+│   │   ├── task_route.cpython-312.pyc
+│   │   ├── user_route.cpython-312.pyc
+│   │   └── water_parameter_route.cpython-312.pyc
+│   ├── aquarium_route.py
+│   ├── equipment_route.py
+│   ├── expense_route.py
+│   ├── fish_route.py
+│   ├── income_route.py
+│   ├── invertebrate_route.py
+│   ├── plant_route.py
+│   ├── resource_route.py
+│   ├── supplier_route.py
+│   ├── task_route.py
+│   ├── user_route.py
+│   └── water_parameter_route.py
+├── run_init_db.py
+├── services
+│   ├── __init__.py
+│   ├── authentication.py
+│   ├── data_import_export.py
+│   ├── notification.py
+│   ├── unit_converter.py
+│   └── volume_calculator.py
+├── setup_test_db.py
+├── start_flask.sh
+├── static
+│   ├── css
+│   │   ├── charts.css
+│   │   ├── forms.css
+│   │   ├── main.css
+│   │   └── responsive.css
+│   ├── images
+│   └── js
+│       ├── api.js
+│       ├── charts.js
+│       ├── main.js
+│       └── validation.js
+├── templates
+│   ├── 404-template.html
+│   ├── 500-template.html
+│   ├── aquarium-template.html
+│   ├── equipment.html
+│   ├── expense.html
+│   ├── fish.html
+│   ├── income.html
+│   ├── index.html
+│   ├── invertebrate.html
+│   ├── login.html
+│   ├── plant.html
+│   ├── resource.html
+│   ├── settings.html
+│   ├── supplier.html
+│   ├── task.html
+│   ├── user.html
+│   └── water-parameter.html
+├── test_database_models.py
+├── tests
+│   ├── __init__.py
+│   ├── factories.py
+│   ├── functional
+│   │   └── __init__.py
+│   ├── integration
+│   │   └── __init__.py
+│   └── unit
+│       └── __init__.py
+├── trac_1
+│   ├── bin
+│   │   ├── Activate.ps1
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── black
+│   │   ├── blackd
+│   │   ├── coverage
+│   │   ├── coverage-3.12
+│   │   ├── coverage3
+│   │   ├── dmypy
+│   │   ├── faker
+│   │   ├── flake8
+│   │   ├── flask
+│   │   ├── mypy
+│   │   ├── mypyc
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.12
+│   │   ├── py.test
+│   │   ├── pycodestyle
+│   │   ├── pyflakes
+│   │   ├── pytest
+│   │   ├── python -> python3.12
+│   │   ├── python3 -> python3.12
+│   │   ├── python3.12 -> /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12
+│   │   ├── stubgen
+│   │   └── stubtest
+│   ├── include
+│   │   ├── python3.12
+│   │   └── site
+│   ├── lib
+│   │   └── python3.12
+│   └── pyvenv.cfg
+├── tree.txt
+└── utils
+    ├── __init__.py
+    ├── app.py
+    ├── constants.py
+    ├── exceptions.py
+    ├── helpers.py
+    ├── logger.py
+    └── validators.py
+
+26 directories, 147 files

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<form method="POST" action="{{ url_for('user.update_settings') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
+    <h2>User Information</h2>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+    </div>
+    
+    <h2>Change Password</h2>
+    <div class="form-group">
+        <label for="current_password">Current Password</label>
+        <input type="password" class="form-control" id="current_password" name="current_password">
+    </div>
+    <div class="form-group">
+        <label for="new_password">New Password</label>
+        <input type="password" class="form-control" id="new_password" name="new_password">
+    </div>
+    <div class="form-group">
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+    </div>
+    
+    <h2>Preferences</h2>
+    <div class="form-group">
+        <label for="temperature_unit">Temperature Unit</label>
+        <select class="form-control" id="temperature_unit" name="temperature_unit">
+            <option value="celsius" {% if current_user.temperature_unit == 'celsius' %}selected{% endif %}>Celsius</option>
+            <option value="fahrenheit" {% if current_user.temperature_unit == 'fahrenheit' %}selected{% endif %}>Fahrenheit</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="volume_unit">Volume Unit</label>
+        <select class="form-control" id="volume_unit" name="volume_unit">
+            <option value="liter" {% if current_user.volume_unit == 'liter' %}selected{% endif %}>Liter</option>
+            <option value="gallon" {% if current_user.volume_unit == 'gallon' %}selected{% endif %}>Gallon</option>
+        </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+</form>
+{% endblock %}

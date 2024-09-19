@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Invertebrates
+     {% elif mode == 'view' %}View Invertebrate
+     {% elif mode == 'add' %}Add New Invertebrate
+     {% else %}Edit Invertebrate
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('invertebrate.add_invertebrate') }}" class="btn btn-primary">Add New Invertebrate</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Common Name</th>
+        <th>Scientific Name</th>
+        <th>Aquarium</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for invertebrate in invertebrates %}
+        <tr>
+          <td>{{ invertebrate.common_name }}</td>
+          <td>{{ invertebrate.scientific_name }}</td>
+          <td>{{ invertebrate.aquarium.name }}</td>
+          <td>
+            <a href="{{ url_for('invertebrate.view_invertebrate', id=invertebrate.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('invertebrate.edit_invertebrate', id=invertebrate.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('invertebrate.delete_invertebrate', id=invertebrate.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('invertebrate.add_invertebrate') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('invertebrate.edit_invertebrate', id=invertebrate.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="aquarium_id">Aquarium:</label>
+      <select class="form-control" id="aquarium_id" name="aquarium_id" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for aquarium in aquariums %}
+          <option value="{{ aquarium.id }}" {% if invertebrate.aquarium_id == aquarium.id %}selected{% endif %}>{{ aquarium.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="scientific_name">Scientific Name:</label>
+      <input type="text" class="form-control" id="scientific_name" name="scientific_name" value="{{ invertebrate.scientific_name }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="common_name">Common Name:</label>
+      <input type="text" class="form-control" id="common_name" name="common_name" value="{{ invertebrate.common_name }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="species">Species:</label>
+      <input type="text" class="form-control" id="species" name="species" value="{{ invertebrate.species }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="family">Family:</label>
+      <input type="text" class="form-control" id="family" name="family" value="{{ invertebrate.family }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="sub_family">Sub Family:</label>
+      <input type="text" class="form-control" id="sub_family" name="sub_family" value="{{ invertebrate.sub_family }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="origin">Origin:</label>
+      <input type="text" class="form-control" id="origin" name="origin" value="{{ invertebrate.origin }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity:</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="{{ invertebrate.quantity }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="max_size">Max Size (cm):</label>
+      <input type="number" step="0.1" class="form-control" id="max_size" name="max_size" value="{{ invertebrate.max_size }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="diet">Diet:</label>
+      <select class="form-control" id="diet" name="diet" {% if mode == 'view' %}disabled{% endif %}>
+        {% for diet_type in ['Omnivore', 'Carnivore', 'Herbivore'] %}
+          <option value="{{ diet_type }}" {% if invertebrate.diet == diet_type %}selected{% endif %}>{{ diet_type }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="temperament">Temperament:</label>
+      <select class="form-control" id="temperament" name="temperament" {% if mode == 'view' %}disabled{% endif %}>
+        {% for temp in ['Peaceful', 'Semi-aggressive', 'Aggressive'] %}
+          <option value="{{ temp }}" {% if invertebrate.temperament == temp %}selected{% endif %}>{{ temp }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Invertebrate</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('invertebrate.edit_invertebrate', id=invertebrate.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

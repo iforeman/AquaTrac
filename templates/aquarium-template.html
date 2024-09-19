@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Aquariums
+     {% elif mode == 'view' %}View Aquarium
+     {% elif mode == 'add' %}Add New Aquarium
+     {% else %}Edit Aquarium
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('aquarium.add_aquarium') }}" class="btn btn-primary">Add New Aquarium</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Capacity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aquarium in aquariums %}
+        <tr>
+          <td>{{ aquarium.name }}</td>
+          <td>{{ aquarium.tank_type }}</td>
+          <td>{{ aquarium.capacity }} L</td>
+          <td>
+            <a href="{{ url_for('aquarium.view_aquarium', id=aquarium.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('aquarium.edit_aquarium', id=aquarium.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('aquarium.delete_aquarium', id=aquarium.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('aquarium.add_aquarium') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('aquarium.edit_aquarium', id=aquarium.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ aquarium.name }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="model">Model:</label>
+      <input type="text" class="form-control" id="model" name="model" value="{{ aquarium.model }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="tank_type">Tank Type:</label>
+      <select class="form-control" id="tank_type" name="tank_type" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for type in ['Community', 'Species', 'Cichlid', 'Biotype', 'Breeding', 'Planted', 'Shrimp', 'Fish-only', 'Coldwater'] %}
+          <option value="{{ type }}" {% if aquarium.tank_type == type %}selected{% endif %}>{{ type }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="shape">Shape:</label>
+      <select class="form-control" id="shape" name="shape" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for shape in ['Cube/Rectangular', 'Bow-Front', 'Hexagonal', 'Cylinder', 'L-shaped', 'Pentagon', 'Column'] %}
+          <option value="{{ shape }}" {% if aquarium.shape == shape %}selected{% endif %}>{{ shape }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="length">Length (cm):</label>
+      <input type="number" step="0.1" class="form-control" id="length" name="length" value="{{ aquarium.length }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="width">Width (cm):</label>
+      <input type="number" step="0.1" class="form-control" id="width" name="width" value="{{ aquarium.width }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="depth">Depth (cm):</label>
+      <input type="number" step="0.1" class="form-control" id="depth" name="depth" value="{{ aquarium.depth }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="capacity">Capacity (L):</label>
+      <input type="number" step="0.1" class="form-control" id="capacity" name="capacity" value="{{ aquarium.capacity }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="substrate">Substrate:</label>
+      <select class="form-control" id="substrate" name="substrate" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for substrate in ['Gravel', 'Sand', 'Planted tank substrates', 'Clay-based substrates', 'Rocks', 'Fluorite', 'None'] %}
+          <option value="{{ substrate }}" {% if aquarium.substrate == substrate %}selected{% endif %}>{{ substrate }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="setup_date">Setup Date:</label>
+      <input type="date" class="form-control" id="setup_date" name="setup_date" value="{{ aquarium.setup_date }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ aquarium.price }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="supplier_id">Supplier:</label>
+      <select class="form-control" id="supplier_id" name="supplier_id" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for supplier in suppliers %}
+          <option value="{{ supplier.id }}" {% if aquarium.supplier_id == supplier.id %}selected{% endif %}>{{ supplier.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Aquarium</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('aquarium.edit_aquarium', id=aquarium.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

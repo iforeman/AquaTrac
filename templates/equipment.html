@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Equipment
+     {% elif mode == 'view' %}View Equipment
+     {% elif mode == 'add' %}Add New Equipment
+     {% else %}Edit Equipment
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('equipment.add_equipment') }}" class="btn btn-primary">Add New Equipment</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Model</th>
+        <th>Aquarium</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in equipment_items %}
+        <tr>
+          <td>{{ item.type }}</td>
+          <td>{{ item.model }}</td>
+          <td>{{ item.aquarium.name }}</td>
+          <td>
+            <a href="{{ url_for('equipment.view_equipment', id=item.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('equipment.edit_equipment', id=item.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('equipment.delete_equipment', id=item.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('equipment.add_equipment') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('equipment.edit_equipment', id=equipment.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="aquarium_id">Aquarium:</label>
+      <select class="form-control" id="aquarium_id" name="aquarium_id" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for aquarium in aquariums %}
+          <option value="{{ aquarium.id }}" {% if equipment.aquarium_id == aquarium.id %}selected{% endif %}>{{ aquarium.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="type">Type:</label>
+      <input type="text" class="form-control" id="type" name="type" value="{{ equipment.type }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="model">Model:</label>
+      <input type="text" class="form-control" id="model" name="model" value="{{ equipment.model }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="performance_lph">Performance (L/h):</label>
+      <input type="number" step="0.1" class="form-control" id="performance_lph" name="performance_lph" value="{{ equipment.performance_lph }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="setup_date">Setup Date:</label>
+      <input type="date" class="form-control" id="setup_date" name="setup_date" value="{{ equipment.setup_date }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="purchase_date">Purchase Date:</label>
+      <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="{{ equipment.purchase_date }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="unit_price">Unit Price:</label>
+      <input type="number" step="0.01" class="form-control" id="unit_price" name="unit_price" value="{{ equipment.unit_price }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity:</label>
+      <input type="number" class="form-control" id="quantity" name="quantity" value="{{ equipment.quantity }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="total">Total:</label>
+      <input type="number" step="0.01" class="form-control" id="total" name="total" value="{{ equipment.total }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="power_input">Power Input (W):</label>
+      <input type="number" step="0.1" class="form-control" id="power_input" name="power_input" value="{{ equipment.power_input }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="power_consumption">Power Consumption (W):</label>
+      <input type="number" step="0.1" class="form-control" id="power_consumption" name="power_consumption" value="{{ equipment.power_consumption }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Equipment</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('equipment.edit_equipment', id=equipment.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Suppliers
+     {% elif mode == 'view' %}View Supplier
+     {% elif mode == 'add' %}Add New Supplier
+     {% else %}Edit Supplier
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('supplier.add_supplier') }}" class="btn btn-primary">Add New Supplier</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in suppliers %}
+        <tr>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.city }}</td>
+          <td>{{ supplier.country }}</td>
+          <td>
+            <a href="{{ url_for('supplier.view_supplier', id=supplier.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('supplier.edit_supplier', id=supplier.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('supplier.delete_supplier', id=supplier.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('supplier.add_supplier') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('supplier.edit_supplier', id=supplier.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{ supplier.name }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="address">Address:</label>
+      <input type="text" class="form-control" id="address" name="address" value="{{ supplier.address }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="address2">Address 2:</label>
+      <input type="text" class="form-control" id="address2" name="address2" value="{{ supplier.address2 }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="postal_code">Postal Code:</label>
+      <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{ supplier.postal_code }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="city">City:</label>
+      <input type="text" class="form-control" id="city" name="city" value="{{ supplier.city }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="country">Country:</label>
+      <input type="text" class="form-control" id="country" name="country" value="{{ supplier.country }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="{{ supplier.phone }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ supplier.email }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="website">Website:</label>
+      <input type="url" class="form-control" id="website" name="website" value="{{ supplier.website }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="contact1">Contact 1:</label>
+      <input type="text" class="form-control" id="contact1" name="contact1" value="{{ supplier.contact1 }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="contact2">Contact 2:</label>
+      <input type="text" class="form-control" id="contact2" name="contact2" value="{{ supplier.contact2 }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="notes">Notes:</label>
+      <textarea class="form-control" id="notes" name="notes" rows="3" {% if mode == 'view' %}readonly{% endif %}>{{ supplier.notes }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="visibility">Visibility:</label>
+      <select class="form-control" id="visibility" name="visibility" {% if mode == 'view' %}disabled{% endif %}>
+        <option value="True" {% if supplier.visibility %}selected{% endif %}>Visible</option>
+        <option value="False" {% if not supplier.visibility %}selected{% endif %}>Hidden</option>
+      </select>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Supplier</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('supplier.edit_supplier', id=supplier.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

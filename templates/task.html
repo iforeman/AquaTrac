@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Tasks
+     {% elif mode == 'view' %}View Task
+     {% elif mode == 'add' %}Add New Task
+     {% else %}Edit Task
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('task.add_task') }}" class="btn btn-primary">Add New Task</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Aquarium</th>
+        <th>Description</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+        <tr>
+          <td>{{ task.aquarium.name }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.due_date }}</td>
+          <td>{% if task.completed %}Completed{% else %}Pending{% endif %}</td>
+          <td>
+            <a href="{{ url_for('task.view_task', id=task.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('task.edit_task', id=task.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('task.delete_task', id=task.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('task.add_task') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('task.edit_task', id=task.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="aquarium_id">Aquarium:</label>
+      <select class="form-control" id="aquarium_id" name="aquarium_id" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for aquarium in aquariums %}
+          <option value="{{ aquarium.id }}" {% if task.aquarium_id == aquarium.id %}selected{% endif %}>{{ aquarium.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea class="form-control" id="description" name="description" rows="3" {% if mode == 'view' %}readonly{% endif %} required>{{ task.description }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="due_date">Due Date:</label>
+      <input type="date" class="form-control" id="due_date" name="due_date" value="{{ task.due_date }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="completed">Status:</label>
+      <select class="form-control" id="completed" name="completed" {% if mode == 'view' %}disabled{% endif %}>
+        <option value="False" {% if not task.completed %}selected{% endif %}>Pending</option>
+        <option value="True" {% if task.completed %}selected{% endif %}>Completed</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="type">Type:</label>
+      <input type="text" class="form-control" id="type" name="type" value="{{ task.type }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="interval">Interval (days):</label>
+      <input type="number" class="form-control" id="interval" name="interval" value="{{ task.interval }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="week_day">Week Day:</label>
+      <select class="form-control" id="week_day" name="week_day" {% if mode == 'view' %}disabled{% endif %}>
+        <option value="">Select a day</option>
+        {% for i in range(7) %}
+          <option value="{{ i }}" {% if task.week_day == i %}selected{% endif %}>{{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][i] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Task</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('task.edit_task', id=task.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

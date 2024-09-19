@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Water Parameters
+     {% elif mode == 'view' %}View Water Parameter
+     {% elif mode == 'add' %}Add New Water Parameter
+     {% else %}Edit Water Parameter
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('water_parameter.add_water_parameter') }}" class="btn btn-primary">Add New Water Parameter</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Aquarium</th>
+        <th>Temperature</th>
+        <th>pH</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for param in water_parameters %}
+        <tr>
+          <td>{{ param.date }}</td>
+          <td>{{ param.aquarium.name }}</td>
+          <td>{{ param.temperature_min }} - {{ param.temperature_max }}°C</td>
+          <td>{{ param.ph_min }} - {{ param.ph_max }}</td>
+          <td>
+            <a href="{{ url_for('water_parameter.view_water_parameter', id=param.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('water_parameter.edit_water_parameter', id=param.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('water_parameter.delete_water_parameter', id=param.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('water_parameter.add_water_parameter') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('water_parameter.edit_water_parameter', id=water_parameter.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="aquarium_id">Aquarium:</label>
+      <select class="form-control" id="aquarium_id" name="aquarium_id" {% if mode == 'view' %}disabled{% endif %} required>
+        {% for aquarium in aquariums %}
+          <option value="{{ aquarium.id }}" {% if water_parameter.aquarium_id == aquarium.id %}selected{% endif %}>{{ aquarium.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <input type="date" class="form-control" id="date" name="date" value="{{ water_parameter.date }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="temperature_min">Min Temperature (°C):</label>
+      <input type="number" step="0.1" class="form-control" id="temperature_min" name="temperature_min" value="{{ water_parameter.temperature_min }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="temperature_max">Max Temperature (°C):</label>
+      <input type="number" step="0.1" class="form-control" id="temperature_max" name="temperature_max" value="{{ water_parameter.temperature_max }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="ph_min">Min pH:</label>
+      <input type="number" step="0.1" class="form-control" id="ph_min" name="ph_min" value="{{ water_parameter.ph_min }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="ph_max">Max pH:</label>
+      <input type="number" step="0.1" class="form-control" id="ph_max" name="ph_max" value="{{ water_parameter.ph_max }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="gh_min">Min GH:</label>
+      <input type="number" step="0.1" class="form-control" id="gh_min" name="gh_min" value="{{ water_parameter.gh_min }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="gh_max">Max GH:</label>
+      <input type="number" step="0.1" class="form-control" id="gh_max" name="gh_max" value="{{ water_parameter.gh_max }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="kh_min">Min KH:</label>
+      <input type="number" step="0.1" class="form-control" id="kh_min" name="kh_min" value="{{ water_parameter.kh_min }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    <div class="form-group">
+      <label for="kh_max">Max KH:</label>
+      <input type="number" step="0.1" class="form-control" id="kh_max" name="kh_max" value="{{ water_parameter.kh_max }}" {% if mode == 'view' %}readonly{% endif %}>
+    </div>
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} Water Parameter</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('water_parameter.edit_water_parameter', id=water_parameter.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

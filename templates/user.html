@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if mode == 'list' %}Users
+     {% elif mode == 'view' %}View User
+     {% elif mode == 'add' %}Add New User
+     {% else %}Edit User
+     {% endif %}
+</h1>
+
+{% if mode == 'list' %}
+  <a href="{{ url_for('user.add_user') }}" class="btn btn-primary">Add New User</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <a href="{{ url_for('user.view_user', id=user.id) }}" class="btn btn-sm btn-info">View</a>
+            <a href="{{ url_for('user.edit_user', id=user.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('user.delete_user', id=user.id) }}" method="POST" style="display: inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <form method="POST" {% if mode == 'add' %}action="{{ url_for('user.add_user') }}"
+                      {% elif mode == 'edit' %}action="{{ url_for('user.edit_user', id=user.id) }}"
+                      {% endif %}>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" {% if mode == 'view' %}readonly{% endif %} required>
+    </div>
+    {% if mode == 'add' or mode == 'edit' %}
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" name="password" {% if mode == 'add' %}required{% endif %}>
+      {% if mode == 'edit' %}<small class="form-text text-muted">Leave blank to keep current password.</small>{% endif %}
+    </div>
+    {% endif %}
+    {% if mode != 'view' %}
+      <button type="submit" class="btn btn-primary">{% if mode == 'add' %}Add{% else %}Update{% endif %} User</button>
+    {% endif %}
+  </form>
+  {% if mode == 'view' %}
+    <a href="{{ url_for('user.edit_user', id=user.id) }}" class="btn btn-warning">Edit</a>
+  {% endif %}
+{% endif %}
+{% endblock %}

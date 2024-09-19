@@ -1,7 +1,27 @@
-<!-- /Users/ian/Documents/Dev/aquatrac/templates/index.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ message }}</h1>
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to AquaTrac</h1>
+    <p class="lead">Manage your aquariums with ease.</p>
+    <hr class="my-4">
+    <p>Get started by adding your first aquarium or check your existing ones.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('aquarium.add_aquarium') }}" role="button">Add Aquarium</a>
+    <a class="btn btn-secondary btn-lg" href="{{ url_for('aquarium.list_aquariums') }}" role="button">View Aquariums</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Recent Tasks</h2>
+        <!-- Add logic to display recent tasks -->
+    </div>
+    <div class="col-md-4">
+        <h2>Water Parameters</h2>
+        <!-- Add logic to display recent water parameters -->
+    </div>
+    <div class="col-md-4">
+        <h2>Recent Activities</h2>
+        <!-- Add logic to display recent activities -->
+    </div>
+</div>
 {% endblock %}

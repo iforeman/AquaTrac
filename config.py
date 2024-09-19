@@ -1,15 +1,10 @@
+import os
+
 class Config:
-    SECRET_KEY = 'your_secret_key'  # Change this to a random secret key
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///instance/aquatrac.db'  # Main database for development
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/ian/Documents/Dev/aquatrac/instance/aquatrac.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-class DevelopmentConfig(Config):
-    DEBUG = True  # Enable debug mode for development
-
-class TestingConfig(Config):
-    TESTING = True  # Enable testing mode
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///instance/test_aquatrac.db'  # Separate database for testing
-
-class ProductionConfig(Config):
-    DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///instance/prod_aquatrac.db'  # Separate database for production
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/ian/Documents/Dev/aquatrac/instance/test_aquatrac.db'
